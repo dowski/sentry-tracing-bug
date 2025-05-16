@@ -1,11 +1,32 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Welcome from "../components/Welcome.astro";
+import Layout from "../layouts/Layout.astro";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
+<script>
+  console.log("start");
+  import * as Sentry from "@sentry/astro";
+
+  Sentry.startSpan({ name: "Bar span", op: "bar" }, (span) => {
+    window.setTimeout(() => {
+      span.end();
+      console.log("logged", span);
+    }, 100);
+  });
+</script>
+
 <Layout>
-	<Welcome />
+  <button id="error-button">Throw test error</button>
+  <script is:inline>
+    function handleClick() {
+      throw new Error("This is a test error");
+    }
+    document
+      .querySelector("#error-button")
+      .addEventListener("click", handleClick);
+  </script>
+  <Welcome />
 </Layout>
